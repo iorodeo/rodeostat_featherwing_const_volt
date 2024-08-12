@@ -29,6 +29,16 @@ When the flash storage is read-write data files will be written to a directory
 named "data_files" on the PyBadge. The data files are named sequentially i.e.,
 data1.txt, data2.txt, ... etc. 
 
+The display on the PyBadge shows the following values:
+
+* **STATE**: the acquisition state (STOPPED/RUNNING)
+* **TIME**:  the acquisitino time (seconds)
+* **VSET**:  the set-point voltage (V)
+* **IWRK**:  the current in/out of the working electrode (uA)
+* **VBAT**:  the battery voltage (V)
+* **MODE**:  flash storage mode (READ-WRITE/READ-ONLY)
+* **FILE**:  the current data file (data1.txt, data2.txt, etc)
+
 
 ## Firmware Installation
 
