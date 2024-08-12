@@ -1,5 +1,6 @@
 $driveLabel = Get-Volume -FileSystemLabel CIRCUITPY
-$drivePath = $drive.DriveLetter + ":\"
+$driveLetter = $drive.DriveLetter
+$drivePath = $driveLetter + ":\"
 $driveGlob = $drivePath + "*"
 
 Remove-Item -Path $driveGlob -Include *.pcf -verbose
