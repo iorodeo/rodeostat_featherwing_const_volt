@@ -32,7 +32,7 @@ data1.txt, data2.txt, ... etc.
 The display on the PyBadge shows the following values:
 
 * **STATE**: the acquisition state (STOPPED/RUNNING)
-* **TIME**:  the acquisitino time (seconds)
+* **TIME**:  the acquisition time (seconds)
 * **VSET**:  the set-point voltage (V)
 * **IWRK**:  the current in/out of the working electrode (uA)
 * **VBAT**:  the battery voltage (V)
