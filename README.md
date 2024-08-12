@@ -32,8 +32,10 @@ data1.txt, data2.txt, ... etc.
 
 ## Firmware Installation
 
-The firmware has been tested on CircuitPython 9.1.1. Instructions for
-installing CircuitPython on the PyBadge can be found  
+The firmware has been tested on CircuitPython 9.1.1. 
+
+
+Instructions for installing CircuitPython on the PyBadge can be found  
 [here](https://learn.adafruit.com/adafruit-pybadge/installing-circuitpython) 
 and [here](https://circuitpython.org/board/pybadge/).
 
