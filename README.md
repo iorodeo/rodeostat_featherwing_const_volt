@@ -34,10 +34,8 @@ data1.txt, data2.txt, ... etc.
 
 The firmware has been tested on CircuitPython 9.1.1. 
 
-
-Instructions for installing CircuitPython on the PyBadge can be found  
-[here](https://learn.adafruit.com/adafruit-pybadge/installing-circuitpython) 
-and [here](https://circuitpython.org/board/pybadge/).
+Instructions for installing CircuitPython on the PyBadge can be found at [Adafruit](https://learn.adafruit.com/adafruit-pybadge/installing-circuitpython) 
+and the [circuitpython.org](https://circuitpython.org/board/pybadge/).
 
 The dependencies for the firmware can be installed using the
 [circup](https://github.com/adafruit/circup) utilty which can be installed on
