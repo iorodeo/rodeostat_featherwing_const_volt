@@ -27,7 +27,8 @@ storage will be read-only for circuitpython and read-write for the host PC
 
 When the flash storage is read-write data files will be written to a directory
 named "data_files" on the PyBadge. The data files are named sequentially i.e.,
-data1.txt, data2.txt, ... etc. 
+data1.txt, data2.txt, ... etc. The data consists of columns of time (s),
+set-point voltage (V) and working electrode current (uA).   
 
 The display on the PyBadge shows the following values:
 
