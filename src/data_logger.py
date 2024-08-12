@@ -82,7 +82,6 @@ class DataLogger:
             self.fid.close()
             self.fid = None
             os.sync()
-            print(os.statvfs('/'))
 
     @if_read_write
     def reset(self):
