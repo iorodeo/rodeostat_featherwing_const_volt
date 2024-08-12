@@ -1,6 +1,6 @@
 # rodeostat_featherwing_const_volt
 
-Example firmware which implements a constant voltage voltammetry example app
+Example firmware which implements a constant voltage voltammetry app
 for the Rodeostat Feather and PyBadge. 
 
 The function of the PyBadge buttons are shown in the figure below. 
