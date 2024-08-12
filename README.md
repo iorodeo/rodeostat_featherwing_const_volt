@@ -8,15 +8,15 @@ The function of the PyBadge buttons are shown in the figure below.
 
 ![button functions](/images/button_functions.png)
 
-* Start Button: connects electrode and starts acquisition. 
+* **Start Button**: connects electrode and starts acquisition. 
 
-* Stop Button: stops acquisition and closes any open files.
+* **Stop Button**: stops acquisition and closes any open files.
 
-* Increase Voltage Button: increases the set-point voltage. 
+* **Increase Voltage Button**: increases the set-point voltage. 
 
-* Decrease Voltage Button: decreases the set-point voltage.  
+* **Decrease Voltage Button**: decreases the set-point voltage.  
 
-* Clear Files Button: erases all data files. 
+* **Clear Files Button**: erases all data files. 
 
 By default, when no buttons are pressed during startup the flash storage
 will be read-write for circuitpython and read-only for the host PC (if
@@ -33,10 +33,9 @@ data1.txt, data2.txt, ... etc.
 ## Firmware Installation
 
 The firmware has been tested on CircuitPython 9.1.1. Instructions for
-installing CircuitPython on the PyBadge can be found here 
-[install circuitpython 1](https://learn.adafruit.com/adafruit-pybadge/installing-circuitpython) 
-and here  
-[install circuitpython 2](https://circuitpython.org/board/pybadge/).
+installing CircuitPython on the PyBadge can be found  
+[here](https://learn.adafruit.com/adafruit-pybadge/installing-circuitpython) 
+and [here](https://circuitpython.org/board/pybadge/).
 
 The dependencies for the firmware can be installed using the
 [circup](https://github.com/adafruit/circup) utilty which can be installed on
