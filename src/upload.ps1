@@ -1,5 +1,5 @@
 $driveLabel = Get-Volume -FileSystemLabel CIRCUITPY
-$driveLetter = $drive.DriveLetter
+$driveLetter = $driveLabel.DriveLetter
 $drivePath = $driveLetter + ":\"
 $driveGlob = $drivePath + "*"
 
