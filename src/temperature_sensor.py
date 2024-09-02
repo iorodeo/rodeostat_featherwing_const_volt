@@ -12,8 +12,6 @@ class TemperatureSensor:
 
     def __init__(self):
         self.value = None 
-        self.average_value = None
-        self.average_count = None 
         self.have_sensor = False
 
         if constants.TEMP_SENSOR_ENABLED:
@@ -36,21 +34,8 @@ class TemperatureSensor:
         return self.READY_MARGIN*self.conversion_delay + time.monotonic()
 
     @utils.with_temp_sensor
-    def reset_average(self):
-        self.average_value = None 
-        self.average_count = None
-
-    @utils.with_temp_sensor
     def update(self):
         if time.monotonic() > self.t_ready: 
             self.value = self.sensor.read_temperature()
             self.sensor.start_temperature_read()
             self.t_ready = self.next_t_ready()
-            if self.average_value is None:
-                self.average_value = self.value
-                self.average_count = 0
-            else:
-                old_count = self.average_count
-                new_count = self.average_count + 1
-                self.average_value = (old_count/new_count)*self.average_value + self.value/new_count 
-                self.average_count = new_count

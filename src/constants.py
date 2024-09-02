@@ -1,5 +1,3 @@
-LOOP_DT = 0.2
-
 # Voltage and current 
 CURRENT_RANGE = '100uA'
 DEFAULT_SETPT_VOLT = 0.5
@@ -8,12 +6,18 @@ SETPT_VOLT_MAXVAL  = 1.6
 SETPT_VOLT_MINVAL  = -1.6
 
 # Temperature sensor
-TEMP_SENSOR_ENABLED = True 
-TEMP_SENSOR_RESOLUTION = 12 
+TEMP_SENSOR_ENABLED = False 
+TEMP_SENSOR_RESOLUTION = 12 # 9, 10, 11 or 12 
 TEMP_SENSOR_SCHEDULE = [
-        ( 5.0, 10.0),  # (t_start, t_stop)
-        (20.0, 30.0),
-        ]
+        ( 5.0, 10.0),  # window #1 (t_start, t_stop)
+        (20.0, 30.0),  # window #2 (t_start, t_stop) 
+        ]              # ... etc
+
+# Data logging
+DATA_FILES_DIR = 'data_files'
+DATA_FILE_PREFIX = 'data'
+TEMP_FILE_PREFIX = 'temp'
+TEMP_IN_DATA_FILE = False 
 
 # Button assignments
 BUTTON_STOP = 3
@@ -51,8 +55,4 @@ if TEMP_SENSOR_ENABLED:
 else:
     LABELS_YPOS_STEP = 18 
 
-# Data logging
-DATA_FILES_DIR = 'data_files'
-DATA_FILE_PREFIX = 'data'
-TEMP_FILE_PREFIX = 'temp'
 

@@ -48,11 +48,12 @@ class BatteryMonitor:
             for i in range(self.VOLT_NUM_INIT):
                 dummy = self.voltage_raw
 
-            #Create lowpass filter 
+            #Create lowpass filter. Note dt doesn't really matter here as we just 
+            # want to smooth the battery values a bit
             self.lowpass = lowpass_filter.LowpassFilter(
                     freq_cutoff = self.FREQ_CUTOFF, 
                     value = self.voltage_raw,  
-                    dt = constants.LOOP_DT
+                    dt = 0.2, 
                     )
         else:
             # Update filter on new reading

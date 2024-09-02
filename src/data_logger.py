@@ -1,6 +1,7 @@
 import os
 import utils
 import constants
+from running_average import RunningAverage
 
 
 class DataLogger:
@@ -47,6 +48,7 @@ class DataLogger:
         self.file_count = 0
         self.create_data_dir()
         self.init_file_count()
+        self.temp_averages = [RunningAverage() for _ in constants.TEMP_SENSOR_SCHEDULE]
 
     def __del__(self):
         os.sync()
@@ -68,8 +70,10 @@ class DataLogger:
         """ Increments file count and starts data logging """
         self.incr_file()
         self.data_fid = open(self.data_file_path, 'w')
-        if constants.TEMP_SENSOR_ENABLED:
+        if constants.TEMP_SENSOR_ENABLED and constants.TEMP_SENSOR_SCHEDULE:
             self.temp_fid = open(self.temp_file_path, 'w')
+            for average in self.temp_averages:
+                average.reset()
 
     @utils.if_read_write
     def stop(self):
@@ -107,10 +111,8 @@ class DataLogger:
 
     def incr_file(self):
         self.file_count += 1
-
         self.data_file_name = f'{constants.DATA_FILE_PREFIX}{self.file_count}.txt'
         self.data_file_path = f'{constants.DATA_FILES_DIR}/{self.data_file_name}'
-
         self.temp_file_name = f'{constants.TEMP_FILE_PREFIX}{self.file_count}.txt'
         self.temp_file_path = f'{constants.DATA_FILES_DIR}/{self.temp_file_name}'
 
@@ -121,14 +123,19 @@ class DataLogger:
 
     @utils.if_read_write
     def update(self, data):
-        t = data['t']
+        t    = data['t']
         volt = data['volt']
         curr = data['curr']
-        self.write_data(f'{t:1.2f} {volt:1.2f} {curr:1.2f}')
+        temp = data['temp']
+        if constants.TEMP_IN_DATA_FILE and temp is not None:
+            self.write_data(f'{t:1.2f} {volt:1.2f} {curr:1.2f} {temp:1.2f}')
+        else:
+            self.write_data(f'{t:1.2f} {volt:1.2f} {curr:1.2f}')
         if constants.TEMP_SENSOR_ENABLED:
-            temp = data['temp']
-            temp_avg = data['temp_avg']
-            for t_start, t_stop in constants.TEMP_SENSOR_SCHEDULE:
-                if t >= t_start and t <= t_stop:
-                    self.write_temp(f'{t:1.2f} {temp:1.2f} {temp_avg:1.2f}')
+            for index, window in enumerate(constants.TEMP_SENSOR_SCHEDULE):
+                t0, t1 = window
+                if t >= t0 and t <= t1 and temp is not None: 
+                    self.temp_averages[index].update(temp)
+                    temp_average = self.temp_averages[index].value
+                    self.write_temp(f'{t:1.2f} {temp:1.2f} {temp_average:1.2f}')
 

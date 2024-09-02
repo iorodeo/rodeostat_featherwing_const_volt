@@ -90,7 +90,6 @@ class ConstVoltApp:
         self.running = True
         self.data_logger.start()
         self.display.set_running(True)
-        self.temperature_sensor.reset_average()
 
     def on_button_stop(self):
         self.pstat.connected = False
@@ -132,17 +131,15 @@ class ConstVoltApp:
                 self.display.set_time(t)
                 self.display.set_curr(curr_ua)
                 data = {
-                        't'        : t, 
-                        'volt'     : self.setpt_voltage, 
-                        'curr'     : curr_ua, 
-                        'temp'     : self.temperature_sensor.value, 
-                        'temp_avg' : self.temperature_sensor.average_value, 
+                        't'    : t, 
+                        'volt' : self.setpt_voltage, 
+                        'curr' : curr_ua, 
+                        'temp' : self.temperature_sensor.value, 
                         }
                 self.data_logger.update(data)
             else:
                 self.display.set_time(0.0)
                 self.display.set_curr(None)
-            #time.sleep(constants.LOOP_DT)
 
 
 
