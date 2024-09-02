@@ -49,7 +49,7 @@ class ConstVoltDisplay:
         # Create time label 
         self.time_label = label.Label(
                 font, 
-                text = f'{constants.TIME_STR} 0.0',  
+                text = f'{constants.TIME_STR}    0.0',  
                 color = color_to_rgb[constants.TEXT_COLOR], 
                 scale = 1,
                 anchor_point = (0.0, 0.0),
@@ -60,7 +60,7 @@ class ConstVoltDisplay:
         # Create voltage label 
         self.volt_label = label.Label(
                 font, 
-                text = f'{constants.VOLT_STR} 0.0',  
+                text = f'{constants.VOLT_STR}    0.0',  
                 color = color_to_rgb[constants.TEXT_COLOR], 
                 scale = 1,
                 anchor_point = (0.0, 0.0),
@@ -71,13 +71,25 @@ class ConstVoltDisplay:
         # Create current label 
         self.curr_label = label.Label(
                 font, 
-                text = f'{constants.CURR_STR} 0.0',  
+                text = f'{constants.CURR_STR}    0.0',  
                 color = color_to_rgb[constants.TEXT_COLOR], 
                 scale = 1,
                 anchor_point = (0.0, 0.0),
                 )
         self.curr_label.anchored_position = xpos, ypos 
         ypos += ystep
+
+        # Create temperature label (if temperature sensor enabled)
+        if constants.TEMP_SENSOR_ENABLED:
+            self.temp_label = label.Label(
+                    font, 
+                    text = f'{constants.TEMP_STR}    0.0',  
+                    color = color_to_rgb[constants.TEXT_COLOR], 
+                    scale = 1,
+                    anchor_point = (0.0, 0.0),
+                    )
+            self.temp_label.anchored_position = xpos, ypos 
+            ypos += ystep
 
         # Create battery voltage label
         self.vbat_label = label.Label(
@@ -118,6 +130,8 @@ class ConstVoltDisplay:
         self.group.append(self.time_label)
         self.group.append(self.volt_label)
         self.group.append(self.curr_label)
+        if constants.TEMP_SENSOR_ENABLED:
+            self.group.append(self.temp_label)
         self.group.append(self.vbat_label)
         self.group.append(self.mode_label)
         self.group.append(self.file_label)
@@ -130,7 +144,7 @@ class ConstVoltDisplay:
             text = f'{constants.STATE_STR}   {constants.STOPPED_STR}'
         self.running_label.text = text
     def set_time(self, t):
-        self.time_label.text = f'{constants.TIME_STR} {t:7.2f}s'
+        self.time_label.text = f'{constants.TIME_STR}  {t:6.0f}s'
 
     def set_volt(self, volt):
         if volt is not None:
@@ -141,10 +155,18 @@ class ConstVoltDisplay:
 
     def set_curr(self, curr):
         if curr is not None:
-            text = f'{constants.CURR_STR}  {curr:7.2f}uA'
+            text = f'{constants.CURR_STR} {curr:7.2f}uA'
         else:
             text = f'{constants.CURR_STR}    {constants.NONE_STR}'
         self.curr_label.text = text
+
+    def set_temp(self, temp):
+        if constants.TEMP_SENSOR_ENABLED:
+            if temp is not None:
+                text = f'{constants.TEMP_STR}  {temp:7.2f}C'
+            else:
+                text = f'{constants.TEMP_STR}    {constants.NONE_STR}'
+            self.temp_label.text = text
 
     def set_vbat(self, volt):
         if volt is not None:

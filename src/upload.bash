@@ -2,7 +2,8 @@ echo "cleaning CIRCUITPY"
 for entry in /media/$USER/CIRCUITPY/*
 do 
     case $entry in
-        *.py | *.pcf)
+        #*.py | *.pcf)
+        *.py)
             echo "rm" $entry
             rm $entry
             ;;
@@ -15,7 +16,8 @@ echo "uploading new firmware"
 for entry in *
 do
     case $entry in 
-        *.py |*.pcf)
+        #*.py |*.pcf)
+        *.py)
             echo $entry "->" /media/$USER/CIRCUITPY
             cp $entry /media/$USER/CIRCUITPY
             ;;

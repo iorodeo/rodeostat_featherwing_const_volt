@@ -1,5 +1,9 @@
+import constants
 
 UINT16_MAX_VALUE = 2**16 - 1
+
+# Utility functions
+# -----------------------------------------------------------------------
 
 def volt_to_uint16(v,vref):
     vint = int(UINT16_MAX_VALUE*float(v)/float(vref))
@@ -27,3 +31,32 @@ def is_read_only():
             if 'read-only' in line:
                 read_only = True
     return read_only
+
+# Decorators
+# ------------------------------------------------------------------------
+
+def if_read_write(func):
+    """ 
+    Class method decorator, modifies method so that method is only called if
+    the class's read_only property is False  
+    """
+    def wrap(self, *args, **kwargs):
+        if self.read_only:
+            return None
+        else:
+            return func(self, *args, **kwargs)
+    return wrap
+
+def with_temp_sensor(func):
+    """ 
+    Class method decorator, modifies method so that method is only called if
+    the temperature sensor is enabled, the is found on the onewire bus, i.e., 
+    self.have_sensor==True.
+    """
+    def wrap(self, *args, **kwargs):
+        if constants.TEMP_SENSOR_ENABLED and self.have_sensor: 
+            return func(self, *args, **kwargs)
+        else:
+            return None
+    return wrap
+

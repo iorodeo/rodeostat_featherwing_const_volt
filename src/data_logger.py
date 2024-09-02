@@ -2,18 +2,6 @@ import os
 import utils
 import constants
 
-def if_read_write(func):
-    """ 
-    Decorator, modifies method so that method is only called if the class's
-    read_only property is False  
-    """
-    def wrap(self, *args, **kwargs):
-        if self.read_only:
-            return None
-        else:
-            return func(self, *args, **kwargs)
-    return wrap
-
 
 class DataLogger:
     """
@@ -50,63 +38,97 @@ class DataLogger:
 
     def __init__(self, read_only):
         self.read_only = read_only
-        self.fid = None
-        self.file_name = None 
-        self.file_path = None
+        self.data_fid = None
+        self.temp_fid = None
+        self.data_file_name = None 
+        self.data_file_path = None
+        self.temp_file_name = None
+        self.temp_file_path = None
         self.file_count = 0
         self.create_data_dir()
         self.init_file_count()
 
     def __del__(self):
-        if self.fid is not None:
-            os.sync()
-            self.fid.close()
+        os.sync()
+        if self.data_fid is not None:
+            self.data_fid.close()
+        if self.temp_fid is not None:
+            self.temp_fid.close()
 
-    @if_read_write
+    @utils.if_read_write
     def init_file_count(self):
         """ Checks for existing data files and sets file_count. """
         self.file_count = 0
         for item in os.listdir(constants.DATA_FILES_DIR):
-            self.incr_file()
+            if constants.DATA_FILE_PREFIX in item:
+                self.incr_file()
 
-    @if_read_write
+    @utils.if_read_write
     def start(self):
         """ Increments file count and starts data logging """
         self.incr_file()
-        self.fid = open(self.file_path, 'w')
+        self.data_fid = open(self.data_file_path, 'w')
+        if constants.TEMP_SENSOR_ENABLED:
+            self.temp_fid = open(self.temp_file_path, 'w')
 
-    @if_read_write
+    @utils.if_read_write
     def stop(self):
         """ Stops data logging """
-        if self.fid is not None:
-            self.fid.close()
-            self.fid = None
-            os.sync()
+        if self.data_fid is not None:
+            self.data_fid.close()
+            self.data_fid = None
+        if self.temp_fid is not None:
+            self.temp_fid.close()
+            self.temp_fid = None
+        os.sync()
 
-    @if_read_write
+    @utils.if_read_write
     def reset(self):
         """ Erases existing data files and resets file count """ 
-        if self.fid is not None:
+        if self.data_fid is not None or self.temp_fid is not None:
             self.stop()
         for file_name in os.listdir(constants.DATA_FILES_DIR):
             os.unlink(f'{constants.DATA_FILES_DIR}/{file_name}')
         self.file_count = 0
-        self.file_name = constants.NONE_STR 
+        self.data_file_name = constants.NONE_STR 
+        self.temp_file_name = constants.NONE_STR
         os.sync()
 
-    @if_read_write
-    def write(self, data):
-        if self.fid is not None:
-            self.fid.write(f'{data}\n')
+    @utils.if_read_write
+    def write_data(self, msg):
+        if self.data_fid is not None:
+            self.data_fid.write(f'{msg}\n')
 
-    @if_read_write
+    @utils.if_read_write
+    def write_temp(self,msg):
+        if constants.TEMP_SENSOR_ENABLED:
+            if self.temp_fid is not None:
+                self.temp_fid.write(f'{msg}\n')
+
     def incr_file(self):
         self.file_count += 1
-        self.file_name = f'{constants.DATA_FILE_PREFIX}{self.file_count}.txt'
-        self.file_path = f'{constants.DATA_FILES_DIR}/{self.file_name}'
 
-    @if_read_write
+        self.data_file_name = f'{constants.DATA_FILE_PREFIX}{self.file_count}.txt'
+        self.data_file_path = f'{constants.DATA_FILES_DIR}/{self.data_file_name}'
+
+        self.temp_file_name = f'{constants.TEMP_FILE_PREFIX}{self.file_count}.txt'
+        self.temp_file_path = f'{constants.DATA_FILES_DIR}/{self.temp_file_name}'
+
+    @utils.if_read_write
     def create_data_dir(self):
         if not constants.DATA_FILES_DIR in os.listdir():
             os.mkdir(constants.DATA_FILES_DIR)
+
+    @utils.if_read_write
+    def update(self, data):
+        t = data['t']
+        volt = data['volt']
+        curr = data['curr']
+        self.write_data(f'{t:1.2f} {volt:1.2f} {curr:1.2f}')
+        if constants.TEMP_SENSOR_ENABLED:
+            temp = data['temp']
+            temp_avg = data['temp_avg']
+            for t_start, t_stop in constants.TEMP_SENSOR_SCHEDULE:
+                if t >= t_start and t <= t_stop:
+                    self.write_temp(f'{t:1.2f} {temp:1.2f} {temp_avg:1.2f}')
 

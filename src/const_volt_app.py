@@ -6,6 +6,7 @@ from potentiostat import Potentiostat
 from button_monitor import ButtonMonitor
 from battery_monitor import BatteryMonitor
 from const_volt_display import ConstVoltDisplay
+from temperature_sensor import TemperatureSensor
 
 class ConstVoltApp:
     """
@@ -58,12 +59,13 @@ class ConstVoltApp:
         self.button_monitor = ButtonMonitor()
         self.battery_monitor = BatteryMonitor()
         self.data_logger = DataLogger(self.read_only)
+        self.temperature_sensor = TemperatureSensor()
+
         self.display = ConstVoltDisplay()
         self.display.set_running(False)
         self.display.set_time(0.0)
         self.display.set_volt(self.setpt_voltage)
         self.display.set_curr(0.0)
-
         self.button_to_action = {
                 constants.BUTTON_START       : self.on_button_start, 
                 constants.BUTTON_STOP        : self.on_button_stop, 
@@ -88,6 +90,7 @@ class ConstVoltApp:
         self.running = True
         self.data_logger.start()
         self.display.set_running(True)
+        self.temperature_sensor.reset_average()
 
     def on_button_stop(self):
         self.pstat.connected = False
@@ -112,22 +115,34 @@ class ConstVoltApp:
     def run(self):
         while True:
             self.handle_button_press()
+            
             self.battery_monitor.update()
+            self.temperature_sensor.update()
+
             self.display.set_volt(self.setpt_voltage)
             self.display.set_mode(self.read_only)
-            self.display.set_file(self.data_logger.file_name)
+            self.display.set_file(self.data_logger.data_file_name)
             self.display.set_vbat(self.battery_monitor.voltage_lowpass)
+            self.display.set_temp(self.temperature_sensor.value)
+
             if self.running:
                 t = time.monotonic() - self.t_start
                 self.pstat.voltage = self.setpt_voltage
                 curr_ua = utils.convert_a_to_ua(self.pstat.current)
-                self.data_logger.write(f'{t:1.2f} {self.setpt_voltage:1.2f} {curr_ua:1.2f}')
                 self.display.set_time(t)
                 self.display.set_curr(curr_ua)
+                data = {
+                        't'        : t, 
+                        'volt'     : self.setpt_voltage, 
+                        'curr'     : curr_ua, 
+                        'temp'     : self.temperature_sensor.value, 
+                        'temp_avg' : self.temperature_sensor.average_value, 
+                        }
+                self.data_logger.update(data)
             else:
                 self.display.set_time(0.0)
                 self.display.set_curr(None)
-            time.sleep(constants.LOOP_DT)
+            #time.sleep(constants.LOOP_DT)
 
 
 

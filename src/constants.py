@@ -1,4 +1,4 @@
-LOOP_DT = 0.01
+LOOP_DT = 0.2
 
 # Voltage and current 
 CURRENT_RANGE = '100uA'
@@ -6,6 +6,14 @@ DEFAULT_SETPT_VOLT = 0.5
 SETPT_VOLT_STEP    = 0.05
 SETPT_VOLT_MAXVAL  = 1.6
 SETPT_VOLT_MINVAL  = -1.6
+
+# Temperature sensor
+TEMP_SENSOR_ENABLED = True 
+TEMP_SENSOR_RESOLUTION = 12 
+TEMP_SENSOR_SCHEDULE = [
+        ( 5.0, 10.0),  # (t_start, t_stop)
+        (20.0, 30.0),
+        ]
 
 # Button assignments
 BUTTON_STOP = 3
@@ -22,6 +30,7 @@ STATE_STR = 'STATE'
 TIME_STR = 'TIME'
 VOLT_STR = 'VSET'
 CURR_STR = 'IWRK'
+TEMP_STR = 'TEMP'
 VBAT_STR = 'VBAT'
 MODE_STR = 'MODE'
 FILE_STR = 'FILE'
@@ -37,8 +46,13 @@ BACKGROUND_COLOR = 'black'
 # Display positioning
 LABELS_XPOS = 4
 LABELS_YPOS_START = 0
-LABELS_YPOS_STEP = 18 
+if TEMP_SENSOR_ENABLED:
+    LABELS_YPOS_STEP = 16 
+else:
+    LABELS_YPOS_STEP = 18 
 
 # Data logging
 DATA_FILES_DIR = 'data_files'
 DATA_FILE_PREFIX = 'data'
+TEMP_FILE_PREFIX = 'temp'
+
