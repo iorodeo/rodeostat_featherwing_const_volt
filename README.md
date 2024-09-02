@@ -92,7 +92,7 @@ in the images below.
 
 ![temp sensor connection 1](images/temp_sensor_connection_1.png)
 
-![temp sensor connection 2](images/temp_sensor_connection_2.png)
+![temp sensor connection 2](images/temp_sensor_connection_2_mod.png)
 
 Be sure to connect a 4.7k (or similar resistor between the D2 signal wire and
 VCC). The temperature sensor and temperature measurements can be enabled and
