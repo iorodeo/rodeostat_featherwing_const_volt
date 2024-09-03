@@ -117,8 +117,11 @@ TEMP_SENSOR_SCHEDULE = [
         ]              # ... etc
 
 ```
+
 If a temperature schedule is specified then a separate temperature data file
 will be written. By default this file will be called temp{n}.txt corresponding
-the the nth data file. The prefix used for this file can be changed in the
-constants.py file.  The file consists for columns of time, temperature and
-average temperature recorded during each measurement window.  
+to the nth data file. The prefix used for this file can be changed in the
+constants.py file. The file consists of three columns of time, temperature and
+average temperature recorded during each measurement window. The running
+average temperature is reset for each measurement window.
+
